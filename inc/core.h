@@ -22,7 +22,17 @@
 #  include <SDL.h>
 # endif
 
+# include <pthread.h>
 # include "constants.h"
+
+typedef struct			s_philosopher
+{
+	int					state; // 0 rest / 1 eat / 2 think
+	pthread_t			thread;
+	pthread_mutex_t		mutex;
+	int					right_stick;
+	int					left_stick;
+}						t_philosopher;
 
 typedef struct			s_core
 {
@@ -30,9 +40,17 @@ typedef struct			s_core
 	int					height;
 	SDL_Window			*window;
 	SDL_GLContext		*context;
+	t_philosopher		p[7];
 }						t_core;
 
+typedef struct			s_pargs
+{
+	t_core				*core;
+	int					i;
+}						t_pargs;
+
 int						init_core(t_core *core);
+int						init_philosophers(t_core *core);
 void					loop(t_core *core);
 void					gl_enable_2d(int cam_x, int cam_y);
 void					gl_disable_2d(void);
