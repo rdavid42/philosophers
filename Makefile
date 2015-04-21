@@ -13,7 +13,7 @@ HEADER		=	-I./$(INC_PATH) `sdl2-config --cflags`
 FLAGS		=	-Ofast -g -Wall -Wextra -Werror -Wno-deprecated-declarations
 VARS		=	-D_REENTRANT -D_THREAD_SAFE -DDEBUG
 
-NAME		=	philosophers
+NAME		=	philo
 
 ifeq "$(PLATFORM)" "WIN32"
 NAME		+=	.exe

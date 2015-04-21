@@ -32,7 +32,7 @@ void				loop(t_core *core)
 			}
 		}
 		SDL_SetWindowTitle(core->window, "Philosophers");
-		update();
+		update(&core);
 		render();
 		SDL_GL_SwapWindow(core->window);
 	}

@@ -16,16 +16,32 @@
 #include <stdlib.h>
 #include "core.h"
 
+void				unlock_sticks(t_philosopher *p)
+{
+	if (p->left_locked)
+	{
+		pthread_mutex_unlock(&p->c->s[p->i]);
+		p->left_locked = 0;
+	}
+	if (p->right_locked)
+	{
+		pthread_mutex_unlock(&p->c->s[(p->i + 1) % PN]);
+		p->right_locked = 0;
+	}
+}
+
 void				*start_philosopher(void *pa)
 {
 	t_philosopher	*s = (t_philosopher *)pa;
 
-	(void)lp;
-	(void)rp;
-	dprintf(2, "%d, %d, %d\n", s->i, lp->i, rp->i);
-	while (1)
+	while (!s->stop)
 	{
-		usleep(MS(1));
+		if (s->state == RESTING)
+		{
+			unlock_sticks();
+			usleep(MS(REST_T));
+		}
+		
 	}
 	return (NULL);
 }
@@ -57,18 +73,22 @@ int					init_sticks(t_core *c)
 int					init_philosophers(t_core *c)
 {
 	int				i;
-	int				err;
 
 	i = 0;
 	while (i < PN)
 	{
+		c->p[i].life = MAX_LIFE;
+		c->p[i].c = c;
 		c->p[i].state = RESTING;
-		c->p[i].left_stick = &c->s[i];
-		c->p[i].right_stick = NULL;
-/*		if (pthread_mutex_init(&c->p[i].mutex, NULL) != 0)
-			return (0);*/
-		if ((err = pthread_create(&c->p[i].thread, NULL,
-									start_philosopher, &c->p[i])) != 0)
+		c->p[i].left_locked = 0;
+		c->p[i].right_locked = 0;
+		c->p[i].i = i;
+		c->p[i].is_locked = 0;
+		if (pthread_mutex_init(&c->p[i].mutex, NULL) != 0)
+			return (0);
+		c->p[i].stop = 0;
+		if (pthread_create(&c->p[i].thread, NULL,
+							start_philosopher, &c->p[i]) != 0)
 			return (0);
 		++i;
 	}

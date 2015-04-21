@@ -37,12 +37,16 @@ typedef struct			s_stick
 
 typedef struct			s_philosopher
 {
+	int					life;
 	struct s_core		*c;
 	int					state; // 0 rest / 1 eat / 2 think
-	pthread_t			thread;
-	t_stick				*ls;
-	t_stick				*rs;
+	int					left_locked;
+	int					right_locked;
 	int					i;
+	int					is_locked;
+	pthread_mutex_t		mutex;
+	int					stop;
+	pthread_t			thread;
 }						t_philosopher;
 
 typedef struct			s_core
@@ -61,7 +65,7 @@ void					loop(t_core *core);
 void					gl_enable_2d(int cam_x, int cam_y);
 void					gl_disable_2d(void);
 void					on_keyboard(SDL_KeyboardEvent const *e);
-void					update(void);
+void					update(t_core *c);
 void					render(void);
 int						sdl_error(int code);
 int						slen(char *str);

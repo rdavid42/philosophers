@@ -12,7 +12,15 @@
 
 #include "core.h"
 
-void			update(void)
+void			update(t_core *c)
 {
+	int			i;
 
+	i = 0;
+	while (i < PN)
+	{
+		if (c->p[i].life <= 0)
+			exit(0);
+		++i;
+	}
 }
