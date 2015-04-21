@@ -24,14 +24,25 @@
 
 # include <pthread.h>
 # include "constants.h"
+/*
+  O  O  O  O  O  O  O
+ |  |  |  |  |  |  |
+
+*/
+typedef struct			s_stick
+{
+	int					state;
+	pthread_mutex_t		mutex;
+}						t_stick;
 
 typedef struct			s_philosopher
 {
+	struct s_core		*c;
 	int					state; // 0 rest / 1 eat / 2 think
 	pthread_t			thread;
-	pthread_mutex_t		mutex;
-	int					right_stick;
-	int					left_stick;
+	t_stick				*ls;
+	t_stick				*rs;
+	int					i;
 }						t_philosopher;
 
 typedef struct			s_core
@@ -40,14 +51,9 @@ typedef struct			s_core
 	int					height;
 	SDL_Window			*window;
 	SDL_GLContext		*context;
-	t_philosopher		p[7];
+	t_stick				s[PN];
+	t_philosopher		p[PN];
 }						t_core;
-
-typedef struct			s_pargs
-{
-	t_core				*core;
-	int					i;
-}						t_pargs;
 
 int						init_core(t_core *core);
 int						init_philosophers(t_core *core);
