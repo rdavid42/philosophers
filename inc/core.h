@@ -24,11 +24,7 @@
 
 # include <pthread.h>
 # include "constants.h"
-/*
-  O  O  O  O  O  O  O
- |  |  |  |  |  |  |
 
-*/
 typedef struct			s_stick
 {
 	int					state;
@@ -39,13 +35,12 @@ typedef struct			s_philosopher
 {
 	int					life;
 	struct s_core		*c;
-	int					state; // 0 rest / 1 eat / 2 think
+	int					state;
 	int					left_locked;
 	int					right_locked;
 	int					i;
-	int					is_locked;
-	pthread_mutex_t		mutex;
 	int					stop;
+	int					request;
 	pthread_t			thread;
 }						t_philosopher;
 
@@ -59,15 +54,19 @@ typedef struct			s_core
 	t_philosopher		p[PN];
 }						t_core;
 
-int						init_core(t_core *core);
-int						init_philosophers(t_core *core);
-void					loop(t_core *core);
+char					*itoa(int n);
+int						init_core(t_core *c);
+int						init_sticks(t_core *c);
+int						init_philosophers(t_core *c);
+int						start_philosophers(t_core *c);
+int						loop(t_core *c);
 void					gl_enable_2d(int cam_x, int cam_y);
 void					gl_disable_2d(void);
 void					on_keyboard(SDL_KeyboardEvent const *e);
 void					update(t_core *c);
-void					render(void);
+void					render(t_core *c);
 int						sdl_error(int code);
+int						release_sticks(t_core *c);
 int						slen(char *str);
 
 #endif

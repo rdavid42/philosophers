@@ -16,66 +16,163 @@
 #include <stdlib.h>
 #include "core.h"
 
-void				unlock_sticks(t_philosopher *p)
+void				unlock_sticks(t_philosopher *p, t_stick *s[2])
 {
 	if (p->left_locked)
 	{
-		pthread_mutex_unlock(&p->c->s[p->i]);
+		pthread_mutex_unlock(&s[0]->mutex);
 		p->left_locked = 0;
 	}
 	if (p->right_locked)
 	{
-		pthread_mutex_unlock(&p->c->s[(p->i + 1) % PN]);
+		pthread_mutex_unlock(&s[1]->mutex);
 		p->right_locked = 0;
 	}
 }
 
+void				try_lock_sticks(t_philosopher *p, t_stick *s[2])
+{
+	if (!pthread_mutex_trylock(&s[0]->mutex))
+		p->left_locked = 1;
+	if (!pthread_mutex_trylock(&s[1]->mutex))
+		p->right_locked = 1;
+}
+
+void				philosopher_stop_resting(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+{
+	int				l;
+
+	try_lock_sticks(p, s);
+	if (p->left_locked && p->right_locked)
+		p->state = EATING;
+	else
+	{
+		if (n[0]->state == EATING && n[1]->state == EATING)
+			p->state = RESTING;
+		else
+		{
+			if (p->left_locked)
+			{
+				if (n[1]->state == THINKING)
+				{
+					
+				}
+			}
+			else if (p->right_locked)
+			{
+			}
+			else
+			{
+
+			}
+		}
+	}
+}
+
+void				philosopher_rest(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+{
+	p->state = RESTING;
+	unlock_sticks(p, s);
+	usleep(MS(REST_T));
+	philosopher_stop_resting(p, s, n);
+}
+
+void				philosopher_eat(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+{
+	(void)n;
+	p->state = EATING;
+	usleep(MS(EAT_T));
+	p->life = MAX_LIFE;
+	unlock_sticks(p, s);
+	p->state = RESTING;
+}
+
+void				philosopher_think(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+{
+	size_t			elapsed;
+
+	(void)n;
+	p->state = THINKING;
+	elapsed = 0;
+	while (elapsed < MS(THINK_T))
+	{
+		usleep(MW);
+		elapsed += MW;
+	}
+	unlock_sticks(p, s);
+}
+
 void				*start_philosopher(void *pa)
 {
-	t_philosopher	*s = (t_philosopher *)pa;
+	t_philosopher	*p = (t_philosopher *)pa;
+	t_stick			*s[2];
+	t_philosopher	*n[2];
 
-	while (!s->stop)
+	s[0] = &p->c->s[p->i];
+	s[1] = &p->c->s[(p->i + 1) % PN];
+	n[0] = &p->c->p[(p->i - 1) < 0 ? PN - 1 : (p->i - 1)];
+	n[1] = &p->c->p[(p->i + 1) % PN];
+	while (!p->stop && p->life > 0)
 	{
-		if (s->state == RESTING)
-		{
-			unlock_sticks();
-			usleep(MS(REST_T));
-		}
-		
+		if (p->state == RESTING)
+			philosopher_rest(p, s, n);
+		else if (p->state == EATING)
+			philosopher_eat(p, s, n);
+		else if (p->state == THINKING)
+			philosopher_think(p, s, n);
 	}
+	unlock_sticks(p, s);
+	p->stop = -1;
 	return (NULL);
 }
 
-void				release_sticks(void)
+int					release_sticks(t_core *c)
 {
+	int				i;
 
-}
-
-void				release_philosophers(void)
-{
-
+	i = -1;
+	while (++i < PN)
+	{
+		if (pthread_mutex_destroy(&c->s[i].mutex) != 0)
+			return (0);
+	}
+	return (1);
 }
 
 int					init_sticks(t_core *c)
 {
 	int				i;
 
-	i = 0;
-	while (i < PN)
+	i = -1;
+	while (++i < PN)
 	{
 		c->s[i].state = 0;
 		if (pthread_mutex_init(&c->s[i].mutex, NULL) != 0)
 			return (0);
-		++i;
 	}
+	return (1);
+}
+
+int					start_philosophers(t_core *c)
+{
+	int				i;
+
+	i = -1;
+	while (++i < PN)
+	{
+		if (pthread_create(&c->p[i].thread, NULL,
+							start_philosopher, &c->p[i]) != 0)
+			return (0);
+	}
+	return (1);
 }
 
 int					init_philosophers(t_core *c)
 {
 	int				i;
 
-	i = 0;
-	while (i < PN)
+	i = -1;
+	while (++i < PN)
 	{
 		c->p[i].life = MAX_LIFE;
 		c->p[i].c = c;
@@ -83,14 +180,8 @@ int					init_philosophers(t_core *c)
 		c->p[i].left_locked = 0;
 		c->p[i].right_locked = 0;
 		c->p[i].i = i;
-		c->p[i].is_locked = 0;
-		if (pthread_mutex_init(&c->p[i].mutex, NULL) != 0)
-			return (0);
 		c->p[i].stop = 0;
-		if (pthread_create(&c->p[i].thread, NULL,
-							start_philosopher, &c->p[i]) != 0)
-			return (0);
-		++i;
+		c->p[i].request = REQUEST_NONE;
 	}
 	return (1);
 }

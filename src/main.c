@@ -22,6 +22,8 @@ int			main(int argc, char **argv)
 		return (1);
 	if (!init_philosophers(&core))
 		return (1);
+	if (!start_philosophers(&core))
+		return (1);
 	loop(&core);
 	(void)argc;
 	(void)argv;

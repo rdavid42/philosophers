@@ -16,9 +16,12 @@
 int				sdl_error(int code)
 {
 	char const	*err = SDL_GetError();
+	int			e;
 
-	write(2, "SDL Error: ", 11);
-	write(2, err, slen((char *)err));
-	write(2, "\n", 1);
+	e = 0;
+	e |= write(2, "SDL Error: ", 11);
+	e |= write(2, err, slen((char *)err));
+	e |= write(2, "\n", 1);
+	(void)e;
 	return (code);
 }

@@ -12,8 +12,9 @@
 
 #include "core.h"
 
-void				render(void)
+void				render(t_core *c)
 {
+	(void)c;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gl_enable_2d(0, 0);
 	glBegin(GL_POINTS);

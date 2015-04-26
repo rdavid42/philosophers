@@ -27,6 +27,7 @@ int					init_core(t_core *core)
 		return (sdl_error(0));
 	if (!(core->context = SDL_GL_CreateContext(core->window)))
 		return (sdl_error(0));
+	SDL_SetWindowTitle(core->window, "Philosophers");
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
