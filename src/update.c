@@ -21,7 +21,7 @@ int					monitor_philosophers(t_core *c)
 	dprintf(2, "--------------------\n");
 	i = -1;
 	while (++i < PN)
-		dprintf(2, "P%d: %s, life: %d\n", i, states[c->p[i].state], c->p[i].life);
+		dprintf(2, "P%d: %s, life: %d, left lock: %d, right lock: %d\n", i, states[c->p[i].state], c->p[i].life, c->p[i].left_locked, c->p[i].right_locked);
 	usleep(1);
 	return (0);
 }
