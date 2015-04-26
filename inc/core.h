@@ -40,7 +40,6 @@ typedef struct			s_philosopher
 	int					right_locked;
 	int					i;
 	int					stop;
-	int					request;
 	pthread_t			thread;
 }						t_philosopher;
 

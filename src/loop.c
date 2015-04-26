@@ -29,6 +29,7 @@ int					exit_p(t_core *c)
 		i = -1;
 		while (++i < PN)
 			e += c->p[i].stop;
+		// dprintf(2, "e: %d\n", e);
 		usleep(1);
 	}
 	if (!release_sticks(c))

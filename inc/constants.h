@@ -14,7 +14,7 @@
 # define EATING							1
 # define THINKING						2
 
-# define MAX_LIFE						2
+# define MAX_LIFE						200
 # define EAT_T							2
 # define REST_T							1
 # define THINK_T						3

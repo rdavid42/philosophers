@@ -18,6 +18,7 @@ int					monitor_philosophers(t_core *c)
 	int						i;
 	static char const		*states[3] = { "resting", "eating", "thinking" };
 
+	dprintf(2, "--------------------\n");
 	i = -1;
 	while (++i < PN)
 		dprintf(2, "P%d: %s, life: %d\n", i, states[c->p[i].state], c->p[i].life);
