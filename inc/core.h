@@ -29,7 +29,6 @@
 
 typedef struct			s_stick
 {
-	int					state;
 	pthread_mutex_t		mutex;
 }						t_stick;
 
@@ -48,14 +47,14 @@ typedef struct			s_philosopher
 
 typedef struct			s_graphics
 {
-	float				t_radius;
-	float				p_dist;
+	float				t_width;
+	float				t_height;
+	float				t_x;
+	float				t_y;
 	float				p_radius;
-	float				h_radius;
+	float				p_padding;
+	float				s_padding;
 	float				s_size;
-	int					circle_p;
-	float				cx;
-	float				cy;
 }						t_graphics;
 
 typedef struct			s_core
@@ -73,7 +72,7 @@ typedef struct			s_core
 
 char					*itoa(int n);
 int						init_core(t_core *c);
-void					init_graphics(t_core *c, t_graphics *g);
+void					init_graphics(t_graphics *g);
 int						init_sticks(t_core *c);
 int						init_philosophers(t_core *c);
 int						start_philosophers(t_core *c);

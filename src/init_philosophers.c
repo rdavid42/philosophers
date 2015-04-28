@@ -32,9 +32,9 @@ void				unlock_sticks(t_philosopher *p, t_stick *s[2])
 
 void				try_lock_sticks(t_philosopher *p, t_stick *s[2])
 {
-	if (!pthread_mutex_trylock(&s[0]->mutex))
+	if (!p->left_locked && !pthread_mutex_trylock(&s[0]->mutex))
 		p->left_locked = 1;
-	if (!pthread_mutex_trylock(&s[1]->mutex))
+	if (!p->right_locked && !pthread_mutex_trylock(&s[1]->mutex))
 		p->right_locked = 1;
 }
 
@@ -46,7 +46,17 @@ void				lock_sticks(t_philosopher *p, t_stick *s[2])
 		p->right_locked = 1;
 }
 
-void				philosopher_stop_resting(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+void				request_sticks(t_philosopher *p, t_stick *s[2],
+									t_philosopher *n[2])
+{
+	n[0]->request = REQUEST_STICK;
+	n[1]->request = REQUEST_STICK;
+	lock_sticks(p, s);
+	p->state = EATING;
+}
+
+void				philosopher_try_action(t_philosopher *p, t_stick *s[2],
+											t_philosopher *n[2])
 {
 	try_lock_sticks(p, s);
 	if (p->left_locked && p->right_locked)
@@ -54,19 +64,14 @@ void				philosopher_stop_resting(t_philosopher *p, t_stick *s[2], t_philosopher 
 	else
 	{
 		if (n[0]->state == THINKING && n[1]->state == THINKING)
-		{
-			n[0]->request = REQUEST_RIGHT_STICK;
-			n[1]->request = REQUEST_LEFT_STICK;
-			lock_sticks(p, s);
-			p->state = EATING;
-		}
+			request_sticks(p, s, n);
 		else if (p->right_locked)
 		{
 			if (n[0]->state == THINKING)
 			{
-				n[0]->request = REQUEST_RIGHT_STICK;
-				if (!pthread_mutex_lock(&s[0]->mutex))
-					p->left_locked = 1;
+				n[0]->request = REQUEST_STICK;
+				pthread_mutex_lock(&s[0]->mutex);
+				p->left_locked = 1;
 				p->state = EATING;
 			}
 			else if (n[0]->state == EATING)
@@ -76,9 +81,9 @@ void				philosopher_stop_resting(t_philosopher *p, t_stick *s[2], t_philosopher 
 		{
 			if (n[1]->state == THINKING)
 			{
-				n[1]->request = REQUEST_LEFT_STICK;
-				if (!pthread_mutex_lock(&s[1]->mutex))
-					p->right_locked = 1;
+				n[1]->request = REQUEST_STICK;
+				pthread_mutex_lock(&s[1]->mutex);
+				p->right_locked = 1;
 				p->state = EATING;
 			}
 			else if (n[1]->state == EATING)
@@ -89,14 +94,15 @@ void				philosopher_stop_resting(t_philosopher *p, t_stick *s[2], t_philosopher 
 	}
 }
 
-void				philosopher_rest(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+void				philosopher_rest(t_philosopher *p, t_stick *s[2],
+										t_philosopher *n[2])
 {
-	unlock_sticks(p, s);
 	usleep(MS(REST_T));
-	philosopher_stop_resting(p, s, n);
+	philosopher_try_action(p, s, n);
 }
 
-void				philosopher_eat(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+void				philosopher_eat(t_philosopher *p, t_stick *s[2],
+									t_philosopher *n[2])
 {
 	(void)n;
 	usleep(MS(EAT_T));
@@ -105,30 +111,31 @@ void				philosopher_eat(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
 	p->state = RESTING;
 }
 
-void				philosopher_think(t_philosopher *p, t_stick *s[2], t_philosopher *n[2])
+void				philosopher_think(t_philosopher *p, t_stick *s[2],
+										t_philosopher *n[2])
 {
 	size_t			elapsed;
 
 	(void)n;
 	elapsed = 0;
+	if (p->request == REQUEST_STICK)
+	{
+		unlock_sticks(p, s);
+		p->state = RESTING;
+		return ;
+	}
 	while (elapsed < MS(THINK_T))
 	{
-		if (p->request == REQUEST_RIGHT_STICK && p->right_locked)
-		{
-			pthread_mutex_unlock(&s[1]->mutex);
-			p->state = RESTING;
-			return ;
-		}
-		if (p->request == REQUEST_LEFT_STICK && p->left_locked)
-		{
-			pthread_mutex_unlock(&s[0]->mutex);
-			p->state = RESTING;
-			return ;
-		}
 		usleep(MW);
+		if (p->request == REQUEST_STICK)
+		{
+			unlock_sticks(p, s);
+			p->state = RESTING;
+			return ;
+		}
 		elapsed += MW;
 	}
-	unlock_sticks(p, s);
+	philosopher_try_action(p, s, n);
 }
 
 void				*start_philosopher(void *pa)
@@ -150,7 +157,6 @@ void				*start_philosopher(void *pa)
 		else if (p->state == THINKING)
 			philosopher_think(p, s, n);
 	}
-	p->stop = -1;
 	unlock_sticks(p, s);
 	return (NULL);
 }

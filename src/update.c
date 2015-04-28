@@ -13,19 +13,6 @@
 #include <unistd.h>
 #include "core.h"
 
-// int					monitor_philosophers(t_core *c)
-// {
-// 	int						i;
-// 	static char const		*states[3] = { "resting", "eating", "thinking" };
-
-// 	dprintf(2, "--------------------\n");
-// 	i = -1;
-// 	while (++i < PN)
-// 		dprintf(2, "P%d: %s, life: %d, left lock: %d, right lock: %d\n", i, states[c->p[i].state], c->p[i].life, c->p[i].left_locked, c->p[i].right_locked);
-// 	usleep(1);
-// 	return (0);
-// }
-
 int					philosophers_remove_life(t_core *c)
 {
 	int						i;
@@ -79,7 +66,6 @@ void				update(t_core *c)
 	if (c->dead_count == 0)
 	{
 		clockwork(c);
-		// monitor_philosophers(c);
 		i = -1;
 		while (++i < PN)
 		{

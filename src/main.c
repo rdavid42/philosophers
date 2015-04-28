@@ -21,7 +21,7 @@ int			main(int argc, char **argv)
 #ifdef linux
 	glutInit(&argc, argv);
 #endif
-	init_graphics(&core, &core.g);
+	init_graphics(&core.g);
 	if (!init_sticks(&core))
 		return (1);
 	if (!init_philosophers(&core))
