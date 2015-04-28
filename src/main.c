@@ -16,8 +16,9 @@ int			main(int argc, char **argv)
 {
 	t_core		core;
 
-	if (!init_core(&core))
+	if (!init_core(&core, argc, argv))
 		return (1);
+	init_graphics(&core, &core.g);
 	if (!init_sticks(&core))
 		return (1);
 	if (!init_philosophers(&core))

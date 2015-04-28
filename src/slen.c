@@ -12,7 +12,7 @@
 
 #include "core.h"
 
-int			slen(char *str)
+int			slen(char const *str)
 {
 	int		len;
 

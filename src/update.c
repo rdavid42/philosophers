@@ -13,18 +13,18 @@
 #include <unistd.h>
 #include "core.h"
 
-int					monitor_philosophers(t_core *c)
-{
-	int						i;
-	static char const		*states[3] = { "resting", "eating", "thinking" };
+// int					monitor_philosophers(t_core *c)
+// {
+// 	int						i;
+// 	static char const		*states[3] = { "resting", "eating", "thinking" };
 
-	dprintf(2, "--------------------\n");
-	i = -1;
-	while (++i < PN)
-		dprintf(2, "P%d: %s, life: %d, left lock: %d, right lock: %d\n", i, states[c->p[i].state], c->p[i].life, c->p[i].left_locked, c->p[i].right_locked);
-	usleep(1);
-	return (0);
-}
+// 	dprintf(2, "--------------------\n");
+// 	i = -1;
+// 	while (++i < PN)
+// 		dprintf(2, "P%d: %s, life: %d, left lock: %d, right lock: %d\n", i, states[c->p[i].state], c->p[i].life, c->p[i].left_locked, c->p[i].right_locked);
+// 	usleep(1);
+// 	return (0);
+// }
 
 int					philosophers_remove_life(t_core *c)
 {
@@ -55,6 +55,8 @@ int					clockwork(t_core *c)
 	current_time = time(NULL) - start_time;
 	if (tmp_time != current_time)
 		philosophers_remove_life(c);
+	if (current_time == TIMEOUT)
+		c->stop_sim = 1;
 	return (1);
 }
 
@@ -72,21 +74,22 @@ void				print_dead_philosopher(t_philosopher *p)
 
 void				update(t_core *c)
 {
-	static int				dead_count = 0;
 	int						i;
 
-	if (dead_count < PN)
+	if (c->dead_count == 0)
 	{
 		clockwork(c);
-		monitor_philosophers(c);
+		// monitor_philosophers(c);
 		i = -1;
 		while (++i < PN)
 		{
 			if (c->p[i].life == 0)
 			{
-				dead_count++;
+				c->dead_count++;
 				print_dead_philosopher(&c->p[i]);
 			}
 		}
 	}
+	else
+		c->stop_sim = 1;
 }

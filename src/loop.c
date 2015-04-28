@@ -40,9 +40,11 @@ int					exit_p(t_core *c)
 int					loop(t_core *c)
 {
 	SDL_Event		e;
-	int32_t			quit;
+	int				quit;
 
 	quit = 0;
+	c->stop_sim = 0;
+	c->dead_count = 0;
 	while (!quit)
 	{
 		while (SDL_PollEvent(&e))
@@ -56,7 +58,8 @@ int					loop(t_core *c)
 					return (exit_p(c));
 			}
 		}
-		update(c);
+		if (!c->stop_sim)
+			update(c);
 		render(c);
 		SDL_GL_SwapWindow(c->window);
 	}

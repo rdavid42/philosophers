@@ -12,7 +12,7 @@
 
 #include "core.h"
 
-int					init_core(t_core *core)
+int					init_core(t_core *core, int argc, char **argv)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		return (sdl_error(0));
@@ -27,8 +27,9 @@ int					init_core(t_core *core)
 		return (sdl_error(0));
 	if (!(core->context = SDL_GL_CreateContext(core->window)))
 		return (sdl_error(0));
+	glutInit(&argc, argv);
 	SDL_SetWindowTitle(core->window, "Philosophers");
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(70, (double)core->width / (double)core->height, 0.05, 10);

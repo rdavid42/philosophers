@@ -150,8 +150,8 @@ void				*start_philosopher(void *pa)
 		else if (p->state == THINKING)
 			philosopher_think(p, s, n);
 	}
-	unlock_sticks(p, s);
 	p->stop = -1;
+	unlock_sticks(p, s);
 	return (NULL);
 }
 
