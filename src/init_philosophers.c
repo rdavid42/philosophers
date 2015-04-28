@@ -181,7 +181,6 @@ int					init_sticks(t_core *c)
 	i = -1;
 	while (++i < PN)
 	{
-		c->s[i].state = 0;
 		if (pthread_mutex_init(&c->s[i].mutex, NULL) != 0)
 			return (0);
 	}

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include <math.h>
 #include "core.h"
 
@@ -83,18 +84,59 @@ void				draw_sticks(t_core *c)
 	int				i;
 	int				x;
 	int				y;
-	int				j[2];
+	int				l;
+	// int				r;
+	int				inc;
 
 	x = c->g.t_x + c->g.s_padding;
 	y = c->g.t_y + c->g.s_padding;
+	inc = c->g.p_radius * 2 + c->g.p_padding;
 	glBegin(GL_LINES);
 	i = -1;
 	while (++i < PN)
 	{
-		j[0] = (i - 1) < 0 ? PN - 1 : i - 1;
-		j[1] = (i + 1) % PN;
-		if ()
-		x += c->g.p_radius * 2 + c->g.p_padding;
+		// r = (i - 1) < 0 ? PN - 1 : i - 1;
+		l = (i + 1) % PN;
+		if (!c->p[i].left_locked && !c->p[l].right_locked)
+		{
+			glVertex2f(x + i * inc + 2 * c->g.p_radius, y);
+			glVertex2f(x + i * inc + 2 * c->g.p_radius, y + c->g.s_size);
+		}
+		else if (c->p[i].left_locked && !c->p[l].right_locked)
+		{
+			// glVertex2f();
+			// glVertex2f();
+		}
+		else if (!c->p[i].left_locked && c->p[l].right_locked)
+		{
+			// glVertex2f();
+			// glVertex2f();
+		}
+		else
+		{
+			if (write(2, "Error !\n", 8) == -1)
+				return ;
+		}
+/*		if (c->p[i].left_locked)
+		{
+			glVertex2f(x + c->g.s_padding, y - c->g.p_padding);
+			glVertex2f(x + c->g.s_padding, y - c->g.p_padding + c->g.s_size);
+		}
+		else if (!c->p[j[0]].right_locked)
+		{
+			glVertex2f(x, y);
+			glVertex2f(x, y + c->g.s_size);
+		}
+		if (c->p[i].right_locked)
+		{
+			glVertex2f(x + 2 * c->g.p_padding - c->g.s_padding, y - c->g.p_padding);
+			glVertex2f(x + 2 * c->g.p_padding - c->g.s_padding, y - c->g.p_padding + c->g.s_size);
+		}
+		else if (!c->p[j[1]].left_locked)
+		{
+			glVertex2f(x + 2 * c->g.p_padding, y);
+			glVertex2f(x + 2 * c->g.p_padding, y + c->g.s_size);
+		}*/
 	}
 	glEnd();
 }
