@@ -72,7 +72,7 @@ typedef struct			s_core
 }						t_core;
 
 char					*itoa(int n);
-int						init_core(t_core *c, int argc, char **argv);
+int						init_core(t_core *c);
 void					init_graphics(t_core *c, t_graphics *g);
 int						init_sticks(t_core *c);
 int						init_philosophers(t_core *c);

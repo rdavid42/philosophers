@@ -23,6 +23,7 @@ int					exit_p(t_core *c)
 	i = -1;
 	while (++i < PN)
 		c->p[i].stop = c->p[i].stop != -1 ? 1 : -1;
+	e = 0;
 	while (e != -PN)
 	{
 		e = 0;

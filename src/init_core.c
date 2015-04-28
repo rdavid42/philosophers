@@ -12,7 +12,7 @@
 
 #include "core.h"
 
-int					init_core(t_core *core, int argc, char **argv)
+int					init_core(t_core *core)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		return (sdl_error(0));
@@ -27,7 +27,6 @@ int					init_core(t_core *core, int argc, char **argv)
 		return (sdl_error(0));
 	if (!(core->context = SDL_GL_CreateContext(core->window)))
 		return (sdl_error(0));
-	glutInit(&argc, argv);
 	SDL_SetWindowTitle(core->window, "Philosophers");
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glMatrixMode(GL_PROJECTION);
