@@ -99,24 +99,28 @@ void				draw_sticks(t_core *c)
 		l = (i + 1) % PN;
 		if (!c->p[i].left_locked && !c->p[l].right_locked)
 		{
+			glColor3f(1.0f, 0.0f, 0.0f);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius, y);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius, y + c->g.s_size);
 		}
 		else if (c->p[i].left_locked && !c->p[l].right_locked)
 		{
-			// glVertex2f();
-			// glVertex2f();
+			glColor3f(0.0f, 1.0f, 0.0f);
+			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y - c->g.p_padding);
+			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y - c->g.p_padding + c->g.s_size);
 		}
 		else if (!c->p[i].left_locked && c->p[l].right_locked)
 		{
-			// glVertex2f();
-			// glVertex2f();
+			glColor3f(0.0f, 0.0f, 1.0f);
+			glVertex2f(x + l * inc, y - c->g.p_padding);
+			glVertex2f(x + l * inc, y - c->g.p_padding + c->g.s_size);
+		}
+		else if (c->p[i].left_locked && c->p[l].right_locked)
+		{
+			dprintf(2, "Error: P%d left and P%d right are locked !\n", i, l);
 		}
 		else
-		{
-			if (write(2, "Error !\n", 8) == -1)
-				return ;
-		}
+			dprintf(2, "Error: unknown !\n");
 /*		if (c->p[i].left_locked)
 		{
 			glVertex2f(x + c->g.s_padding, y - c->g.p_padding);
