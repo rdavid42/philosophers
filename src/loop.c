@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <time.h>
 #include <unistd.h>
-#include <stdio.h>
 #include "core.h"
 
 int					exit_p(t_core *c)
