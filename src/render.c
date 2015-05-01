@@ -101,20 +101,20 @@ void				draw_sticks(t_core *c)
 		if (c->s[i].owner == -1)
 		{
 			glColor3f(1.0f, 0.0f, 0.0f);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius, y);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius, y - c->g.s_size);
+			glVertex2f(x + i * inc, y);
+			glVertex2f(x + i * inc, y - c->g.s_size);
 		}
 		else if (c->s[i].owner == i)
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
+			glVertex2f(x + i * inc - c->g.s_padding, y + c->g.p_padding);
+			glVertex2f(x + i * inc - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
 		else if (c->s[i].owner == l)
 		{
 			glColor3f(0.0f, 0.0f, 1.0f);
-			glVertex2f(x + l * inc - c->g.s_padding, y + c->g.p_padding);
-			glVertex2f(x + l * inc - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
+			glVertex2f(x + l * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding);
+			glVertex2f(x + l * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
 		else
 		{
