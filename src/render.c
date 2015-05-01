@@ -67,13 +67,13 @@ void				draw_philosophers(t_core *c)
 	static char const		*state[3] = { "Resting", "Eating", "Thinking" };
 
 	x = c->g.t_x + c->g.p_radius;
-	y = c->g.t_y - c->g.p_radius - c->g.p_padding;
+	y = c->g.t_y + c->g.p_radius + 2 * c->g.p_padding;
 	i = -1;
 	while (++i < PN)
 	{
-		draw_text(x - c->g.p_radius, y - c->g.p_radius - c->g.p_padding, state[c->p[i].state], F1);
-		draw_text(x - c->g.p_radius, y - c->g.p_radius - c->g.p_padding + 20, "life: ", F1);
-		draw_text(x - c->g.p_radius + 40, y - c->g.p_radius - c->g.p_padding + 20, itoa(c->p[i].life), F1);
+		draw_text(x - c->g.p_radius, y + c->g.p_radius + c->g.p_padding, state[c->p[i].state], F1);
+		draw_text(x - c->g.p_radius, y + c->g.p_radius + c->g.p_padding + 20, "life: ", F1);
+		draw_text(x - c->g.p_radius + 40, y + c->g.p_radius + c->g.p_padding + 20, itoa(c->p[i].life), F1);
 		draw_circle(x, y, c->g.p_radius, 20);
 		x += c->g.p_radius * 2 + c->g.p_padding;
 	}
@@ -81,100 +81,54 @@ void				draw_philosophers(t_core *c)
 
 void				draw_sticks(t_core *c)
 {
-	int				i;
-	int				x;
-	int				y;
-	int				l;
-	// int				r;
-	int				inc;
+	int						i;
+	int						x;
+	int						y;
+	int						l;
+	// int						r;
+	int						inc;
+	static char const		*states[3] = { "Resting", "Eating", "Thinking" };
+	static char const		*request[2] = { "no", "yes" };
 
 	x = c->g.t_x + c->g.s_padding;
-	y = c->g.t_y + c->g.s_padding;
+	y = c->g.t_y + c->g.s_padding + c->g.t_height;
 	inc = c->g.p_radius * 2 + c->g.p_padding;
 	glBegin(GL_LINES);
 	i = -1;
 	while (++i < PN)
 	{
-		// r = (i - 1) < 0 ? PN - 1 : i - 1;
-		l = (i + 1) % PN;
+		// r = (i + 1) % PN;
+		l = (i - 1) < 0 ? PN - 1 : i - 1;
 		if (!c->p[i].left_locked && !c->p[l].right_locked)
 		{
 			glColor3f(1.0f, 0.0f, 0.0f);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius, y);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius, y + c->g.s_size);
+			glVertex2f(x + i * inc + 2 * c->g.p_radius, y - c->g.s_size);
 		}
 		else if (c->p[i].left_locked && !c->p[l].right_locked)
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y - c->g.p_padding);
-			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y - c->g.p_padding + c->g.s_size);
+			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding);
+			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
 		else if (!c->p[i].left_locked && c->p[l].right_locked)
 		{
 			glColor3f(0.0f, 0.0f, 1.0f);
-			glVertex2f(x + l * inc, y - c->g.p_padding);
-			glVertex2f(x + l * inc, y - c->g.p_padding + c->g.s_size);
+			glVertex2f(x + l * inc - c->g.s_padding, y + c->g.p_padding);
+			glVertex2f(x + l * inc - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
 		else if (c->p[i].left_locked && c->p[l].right_locked)
 		{
 			dprintf(2, "Error: P%d left and P%d right are locked !\n", i, l);
+			dprintf(2, "- P%d: state: %s, request: %s\n", i, states[c->p[i].state], request[c->p[i].request]);
+			dprintf(2, "- P%d: state: %s, request: %s\n", l, states[c->p[l].state], request[c->p[l].request]);
 		}
 		else
 			dprintf(2, "Error: unknown !\n");
-/*		if (c->p[i].left_locked)
-		{
-			glVertex2f(x + c->g.s_padding, y - c->g.p_padding);
-			glVertex2f(x + c->g.s_padding, y - c->g.p_padding + c->g.s_size);
-		}
-		else if (!c->p[j[0]].right_locked)
-		{
-			glVertex2f(x, y);
-			glVertex2f(x, y + c->g.s_size);
-		}
-		if (c->p[i].right_locked)
-		{
-			glVertex2f(x + 2 * c->g.p_padding - c->g.s_padding, y - c->g.p_padding);
-			glVertex2f(x + 2 * c->g.p_padding - c->g.s_padding, y - c->g.p_padding + c->g.s_size);
-		}
-		else if (!c->p[j[1]].left_locked)
-		{
-			glVertex2f(x + 2 * c->g.p_padding, y);
-			glVertex2f(x + 2 * c->g.p_padding, y + c->g.s_size);
-		}*/
 	}
 	glEnd();
 }
-/*
-void				draw_philosophers_circle(t_core *c)
-{
-	static double const		step = ((PI * 2) / PN);
-	double					x[2];
-	double					y[2];
-	double					cr;
-	int						i;
-	static float const		df = 1.5; // distance factor
-	static char const		*state[3] = { "Resting", "Eating", "Thinking" };
 
-	glPushMatrix();
-	glTranslatef(c->g.cx, c->g.cy, 0);
-	cr = 0;
-	i = -1;
-	while (++i < PN)
-	{
-		x[0] = sin(cr);
-		y[0] = cos(cr);
-		x[1] = x[0] * (c->g.t_radius + c->g.p_dist);
-		y[1] = y[0] * (c->g.t_radius + c->g.p_dist);
-		draw_circle(x[1], y[1], c->g.p_radius, c->g.circle_p);
-		draw_text(x[1] * df - 30, y[1] * df - 10, state[c->p[i].state], F1);
-		draw_text(x[1] * df - 30, y[1] * df - 10 + 20, "life: ", F1);
-		draw_text(x[1] * df - 30 + 40, y[1] * df - 10 + 20,
-				itoa(c->p[i].life), F1);
-		cr += step;
-	}
-	glPopMatrix();
-}
-*/
 void				render(t_core *c)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

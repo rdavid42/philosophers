@@ -18,15 +18,27 @@
 int					exit_p(t_core *c)
 {
 	int				i;
+	int				t;
 
-	i = -1;
-	while (++i < PN)
-		c->p[i].stop = 1;
-	i = -1;
-	while (++i < PN)
-		pthread_join(c->p[i].thread, NULL);
-	if (!release_sticks(c))
-		return (0);
+	dprintf(2, "Exit function called, %d\n", c->stop_sim);
+	if (c->stop_sim != 2)
+	{
+		dprintf(2, "Exiting threads\n");
+		i = -1;
+		while (++i < PN)
+			c->p[i].stop = c->p[i].stop != -1 ? 1 : -1;
+		t = 0;
+		while (t != -PN)
+		{
+			i = -1;
+			t = 0;
+			while (++i < PN)
+				t += c->p[i].stop;
+			usleep(MW);
+		}
+		release_sticks(c);
+		c->stop_sim = 2;
+	}
 	return (1);
 }
 
@@ -53,7 +65,7 @@ int					loop(t_core *c)
 		}
 		if (!c->stop_sim)
 			update(c);
-		else
+		else if (c->stop_sim == 1)
 			exit_p(c);
 		render(c);
 		SDL_GL_SwapWindow(c->window);

@@ -29,6 +29,7 @@
 
 typedef struct			s_stick
 {
+	int					locked;
 	pthread_mutex_t		mutex;
 }						t_stick;
 

@@ -19,7 +19,7 @@ void					init_graphics(t_graphics *g)
 	g->s_size = 35.0f;
 	g->p_radius = 30.0f;
 	g->t_x = 50.0f;
-	g->t_y = 150.0f;
-	g->t_width = PN * ((g->p_radius * 2) + g->p_padding) - g->p_padding;
+	g->t_y = 50.0f;
+	g->t_width = PN * ((g->p_radius * 2) + g->p_padding) - g->p_padding + 10;
 	g->t_height = 50.0f;
 }
