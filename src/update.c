@@ -65,7 +65,6 @@ void				update(t_core *c)
 
 	if (c->dead_count == 0)
 	{
-		clockwork(c);
 		i = -1;
 		while (++i < PN)
 		{
@@ -75,6 +74,7 @@ void				update(t_core *c)
 				print_dead_philosopher(&c->p[i]);
 			}
 		}
+		clockwork(c);
 	}
 	else
 		c->stop_sim = 1;

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*   philosopher_think.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,20 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "core.h"
 
-int					init_philosophers(t_core *c)
+void				philosopher_think(t_philosopher *p, t_stick *s[2],
+										t_philosopher *n[2])
 {
-	int				i;
+	size_t			elapsed;
 
-	i = -1;
-	while (++i < PN)
+	elapsed = 0;
+	while (elapsed < MS(THINK_T))
 	{
-		c->p[i].life = MAX_LIFE;
-		c->p[i].c = c;
-		c->p[i].state = RESTING;
-		c->p[i].i = i;
-		c->p[i].stop = 0;
+		usleep(MW);
+		if (p->stop)
+			return ;
+		if (p->request == REQUEST_STICK)
+		{
+			p->state = RESTING;
+			p->request = REQUEST_NONE;
+			unlock_sticks(p, s);
+			return ;
+		}
+		elapsed += MW;
 	}
-	return (1);
+	philosopher_try_action(p, s, n);
 }

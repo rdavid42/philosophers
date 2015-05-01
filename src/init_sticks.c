@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*   init_sticks.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,18 +12,16 @@
 
 #include "core.h"
 
-int					init_philosophers(t_core *c)
+int					init_sticks(t_core *c)
 {
 	int				i;
 
 	i = -1;
 	while (++i < PN)
 	{
-		c->p[i].life = MAX_LIFE;
-		c->p[i].c = c;
-		c->p[i].state = RESTING;
-		c->p[i].i = i;
-		c->p[i].stop = 0;
+		c->s[i].owner = -1;
+		if (pthread_mutex_init(&c->s[i].mutex, NULL) != 0)
+			return (0);
 	}
 	return (1);
 }

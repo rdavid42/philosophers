@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_philosophers.c                                :+:      :+:    :+:   */
+/*   release_resources.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,23 +12,15 @@
 
 #include "core.h"
 
-void				draw_philosophers(t_core *c)
+int					release_resources(t_core *c)
 {
-	int						i;
-	float					x;
-	float					y;
-	static char const		*state[4] =
+	int				i;
 
-	{ "Resting", "Eating", "Thinking", "Dancing" };
-	x = c->g.t_x + c->g.p_radius;
-	y = c->g.t_y + c->g.p_radius + 2 * c->g.p_padding;
 	i = -1;
 	while (++i < PN)
 	{
-		draw_text(x - c->g.p_radius, y + c->g.p_radius + c->g.p_padding, state[c->p[i].state], F1);
-		draw_text(x - c->g.p_radius, y + c->g.p_radius + c->g.p_padding + 20, "life: ", F1);
-		draw_text(x - c->g.p_radius + 40, y + c->g.p_radius + c->g.p_padding + 20, itoa(c->p[i].life), F1);
-		draw_circle(x, y, c->g.p_radius, 20);
-		x += c->g.p_radius * 2 + c->g.p_padding;
+		if (pthread_mutex_destroy(&c->s[i].mutex) != 0)
+			return (0);
 	}
+	return (1);
 }

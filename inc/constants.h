@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   constants.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/04/20 22:12:24 by rdavid            #+#    #+#             */
+/*   Updated: 2015/04/20 22:12:24 by rdavid           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
@@ -15,6 +27,7 @@
 # define RESTING						(0)
 # define EATING							(1)
 # define THINKING						(2)
+# define DANCING						(3)
 
 # define MAX_LIFE						(20)
 # define EAT_T							(1)

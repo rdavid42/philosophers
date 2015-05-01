@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*   start_philosophers.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,18 +12,18 @@
 
 #include "core.h"
 
-int					init_philosophers(t_core *c)
+int					start_philosophers(t_core *c)
 {
 	int				i;
 
 	i = -1;
 	while (++i < PN)
 	{
-		c->p[i].life = MAX_LIFE;
-		c->p[i].c = c;
-		c->p[i].state = RESTING;
-		c->p[i].i = i;
-		c->p[i].stop = 0;
+		if (pthread_create(&c->p[i].thread, NULL,
+							start_philosopher, &c->p[i]) != 0)
+			return (0);
+		if (pthread_detach(c->p[i].thread) != 0)
+			return (0);
 	}
 	return (1);
 }

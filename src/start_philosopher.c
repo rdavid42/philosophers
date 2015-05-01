@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*   start_philosopher.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,20 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "core.h"
 
-int					init_philosophers(t_core *c)
+static void			end_philosopher(t_philosopher *p, t_stick *s[2])
 {
-	int				i;
+	unlock_sticks(p, s);
+	p->state = RESTING;
+	p->stop = -1;
+}
 
-	i = -1;
-	while (++i < PN)
+void				*start_philosopher(void *pa)
+{
+	t_philosopher	*p = (t_philosopher *)pa;
+	t_stick			*s[2];
+	t_philosopher	*n[2];
+
+	s[0] = &p->c->s[p->i];
+	s[1] = &p->c->s[(p->i + 1) % PN];
+	n[0] = &p->c->p[(p->i - 1) < 0 ? PN - 1 : (p->i - 1)];
+	n[1] = &p->c->p[(p->i + 1) % PN];
+	while (!p->stop)
 	{
-		c->p[i].life = MAX_LIFE;
-		c->p[i].c = c;
-		c->p[i].state = RESTING;
-		c->p[i].i = i;
-		c->p[i].stop = 0;
+		if (p->life > 0)
+		{
+			if (p->state == RESTING)
+				philosopher_rest(p, s, n);
+			else if (p->state == EATING)
+				philosopher_eat(p, s, n);
+			else if (p->state == THINKING)
+				philosopher_think(p, s, n);
+		}
+		else
+			usleep(MW);
 	}
-	return (1);
+	end_philosopher(p, s);
+	return (NULL);
 }

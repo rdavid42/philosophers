@@ -10,20 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "core.h"
 
-int					init_philosophers(t_core *c)
+int					trylock_loop(t_philosopher *p, t_stick *s)
 {
-	int				i;
+	int				l;
+	int				timeout;
 
-	i = -1;
-	while (++i < PN)
+	l = 1;
+	timeout = 0;
+	while (l != 0)
 	{
-		c->p[i].life = MAX_LIFE;
-		c->p[i].c = c;
-		c->p[i].state = RESTING;
-		c->p[i].i = i;
-		c->p[i].stop = 0;
+		if (p->stop == 1 || timeout >= MS(1))
+			return (0);
+		usleep(MW);
+		timeout += MW;
+		l = pthread_mutex_trylock(&s->mutex);
 	}
+	s->owner = p->i;
 	return (1);
 }

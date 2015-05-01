@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*   philosopher_eat.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,20 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "core.h"
 
-int					init_philosophers(t_core *c)
+void				philosopher_eat(t_philosopher *p, t_stick *s[2],
+									t_philosopher *n[2])
 {
-	int				i;
-
-	i = -1;
-	while (++i < PN)
-	{
-		c->p[i].life = MAX_LIFE;
-		c->p[i].c = c;
-		c->p[i].state = RESTING;
-		c->p[i].i = i;
-		c->p[i].stop = 0;
-	}
-	return (1);
+	(void)n;
+	p->request = REQUEST_NONE;
+	usleep(MS(EAT_T));
+	p->life = MAX_LIFE;
+	unlock_sticks(p, s);
+	p->state = RESTING;
 }
