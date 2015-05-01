@@ -111,6 +111,7 @@ void				philosopher_try_action(t_philosopher *p, t_stick *s[2],
 void				philosopher_rest(t_philosopher *p, t_stick *s[2],
 										t_philosopher *n[2])
 {
+	unlock_sticks(p, s);
 	p->request = REQUEST_NONE;
 	usleep(MS(REST_T));
 	philosopher_try_action(p, s, n);

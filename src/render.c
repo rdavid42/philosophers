@@ -116,10 +116,6 @@ void				draw_sticks(t_core *c)
 			glVertex2f(x + l * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding);
 			glVertex2f(x + l * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
-		else
-		{
-			dprintf(2, "Error ! stick owner: %d\n", c->s[i].owner);
-		}
 	}
 	glEnd();
 }
@@ -133,7 +129,10 @@ void				render(t_core *c)
 	draw_table(c);
 	draw_sticks(c);
 	if (c->stop_sim && c->dead_count == 0)
+	{
+		glColor3f(0.0f, 0.0f, 0.0f);
 		draw_text(c->width / 2 - 100, c->height - 100, SUCCESS_STR, F1);
+	}
 	gl_disable_2d();
 	glFlush();
 }
