@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   draw_text.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,22 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "core.h"
 
-void				render(t_core *c)
+void				draw_text(int const x, int const y,
+							char const *text, void *font)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	gl_enable_2d(0, 0);
-	glColor3f(0.0f, 0.0f, 0.0f);
-	draw_philosophers(c);
-	draw_table(c);
-	draw_sticks(c);
-	if (c->stop_sim && c->dead_count == 0)
-	{
-		glColor3f(0.0f, 0.0f, 0.0f);
-		draw_text(c->width / 2 - 100, c->height - 100, SUCCESS_STR, F1);
-	}
-	gl_disable_2d();
-	glFlush();
+	int			i;
+	int	const	len = slen(text);
+
+	glRasterPos2i(x, y);
+	for (i = 0; i < len; ++i)
+		glutBitmapCharacter(font, text[i]);
 }

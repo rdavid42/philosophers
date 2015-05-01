@@ -17,9 +17,9 @@
 # define THINKING						(2)
 
 # define MAX_LIFE						(20)
-# define EAT_T							(2)
+# define EAT_T							(1)
 # define REST_T							(1)
-# define THINK_T						(3)
+# define THINK_T						(1)
 # define TIMEOUT						(30)
 
 #endif

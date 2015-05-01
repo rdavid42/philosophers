@@ -181,7 +181,7 @@ void				*start_philosopher(void *pa)
 	return (NULL);
 }
 
-int					release_sticks(t_core *c)
+int					release_resources(t_core *c)
 {
 	int				i;
 

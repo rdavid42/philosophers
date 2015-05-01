@@ -82,7 +82,13 @@ void					on_keyboard(SDL_KeyboardEvent const *e);
 void					update(t_core *c);
 void					render(t_core *c);
 int						sdl_error(int code);
-int						release_sticks(t_core *c);
+int						release_resources(t_core *c);
 int						slen(char const *str);
+void					draw_circle(float cx, float cy, float r, int s);
+void					draw_table(t_core *c);
+void					draw_philosophers(t_core *c);
+void					draw_text(int const x, int const y,
+								char const *text, void *font);
+void					draw_sticks(t_core *c);
 
 #endif

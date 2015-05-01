@@ -20,10 +20,8 @@ int					exit_p(t_core *c)
 	int				i;
 	int				t;
 
-	dprintf(2, "Exit function called, %d\n", c->stop_sim);
 	if (c->stop_sim != 2)
 	{
-		dprintf(2, "Exiting threads\n");
 		i = -1;
 		while (++i < PN)
 			c->p[i].stop = c->p[i].stop != -1 ? 1 : -1;
@@ -36,7 +34,7 @@ int					exit_p(t_core *c)
 				t += c->p[i].stop;
 			usleep(MW);
 		}
-		release_sticks(c);
+		release_resources(c);
 		c->stop_sim = 2;
 	}
 	return (1);
@@ -48,8 +46,6 @@ int					loop(t_core *c)
 	int				quit;
 
 	quit = 0;
-	c->stop_sim = 0;
-	c->dead_count = 0;
 	while (!quit)
 	{
 		while (SDL_PollEvent(&e))

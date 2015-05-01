@@ -10,10 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "core.h"
 
 int					init_core(t_core *core)
 {
+	if (PN < 2 || PN > 20)
+		return (!write(2, "Wrong number of philosophers ! [2..20]\n", 39));
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		return (sdl_error(0));
 	core->width = 1920;
@@ -29,5 +32,7 @@ int					init_core(t_core *core)
 		return (sdl_error(0));
 	SDL_SetWindowTitle(core->window, "Philosophers");
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	core->stop_sim = 0;
+	core->dead_count = 0;
 	return (1);
 }

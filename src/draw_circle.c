@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   draw_circle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,22 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "core.h"
 
-void				render(t_core *c)
+void				draw_circle(float cx, float cy, float r, int s)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	gl_enable_2d(0, 0);
-	glColor3f(0.0f, 0.0f, 0.0f);
-	draw_philosophers(c);
-	draw_table(c);
-	draw_sticks(c);
-	if (c->stop_sim && c->dead_count == 0)
+	float		t;
+	float		x;
+	float		y;
+	int			i;
+
+	glBegin(GL_LINE_LOOP);
+	i = 0;
+	while (i < s)
 	{
-		glColor3f(0.0f, 0.0f, 0.0f);
-		draw_text(c->width / 2 - 100, c->height - 100, SUCCESS_STR, F1);
+		t = 2.0f * PI * (float)i / (float)s;
+		x = r * cosf(t);
+		y = r * sinf(t);
+		glVertex2f(x + cx, y + cy);
+		i++;
 	}
-	gl_disable_2d();
-	glFlush();
+	glEnd();
 }

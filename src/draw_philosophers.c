@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   draw_philosophers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,22 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "core.h"
 
-void				render(t_core *c)
+void				draw_philosophers(t_core *c)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	gl_enable_2d(0, 0);
-	glColor3f(0.0f, 0.0f, 0.0f);
-	draw_philosophers(c);
-	draw_table(c);
-	draw_sticks(c);
-	if (c->stop_sim && c->dead_count == 0)
+	int						i;
+	float					x;
+	float					y;
+	static char const		*state[3] = { "Resting", "Eating", "Thinking" };
+
+	x = c->g.t_x + c->g.p_radius;
+	y = c->g.t_y + c->g.p_radius + 2 * c->g.p_padding;
+	i = -1;
+	while (++i < PN)
 	{
-		glColor3f(0.0f, 0.0f, 0.0f);
-		draw_text(c->width / 2 - 100, c->height - 100, SUCCESS_STR, F1);
+		draw_text(x - c->g.p_radius, y + c->g.p_radius + c->g.p_padding, state[c->p[i].state], F1);
+		draw_text(x - c->g.p_radius, y + c->g.p_radius + c->g.p_padding + 20, "life: ", F1);
+		draw_text(x - c->g.p_radius + 40, y + c->g.p_radius + c->g.p_padding + 20, itoa(c->p[i].life), F1);
+		draw_circle(x, y, c->g.p_radius, 20);
+		x += c->g.p_radius * 2 + c->g.p_padding;
 	}
-	gl_disable_2d();
-	glFlush();
 }
