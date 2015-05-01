@@ -87,8 +87,7 @@ void				draw_sticks(t_core *c)
 	int						l;
 	// int						r;
 	int						inc;
-	static char const		*states[3] = { "Resting", "Eating", "Thinking" };
-	static char const		*request[2] = { "no", "yes" };
+// /	static char const		*states[3] = { "Resting", "Eating", "Thinking" };
 
 	x = c->g.t_x + c->g.s_padding;
 	y = c->g.t_y + c->g.s_padding + c->g.t_height;
@@ -99,32 +98,28 @@ void				draw_sticks(t_core *c)
 	{
 		// r = (i + 1) % PN;
 		l = (i - 1) < 0 ? PN - 1 : i - 1;
-		if (!c->p[i].left_locked && !c->p[l].right_locked)
+		if (c->s[i].owner == -1)
 		{
 			glColor3f(1.0f, 0.0f, 0.0f);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius, y);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius, y - c->g.s_size);
 		}
-		else if (c->p[i].left_locked && !c->p[l].right_locked)
+		else if (c->s[i].owner == i)
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding);
 			glVertex2f(x + i * inc + 2 * c->g.p_radius - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
-		else if (!c->p[i].left_locked && c->p[l].right_locked)
+		else if (c->s[i].owner == l)
 		{
 			glColor3f(0.0f, 0.0f, 1.0f);
 			glVertex2f(x + l * inc - c->g.s_padding, y + c->g.p_padding);
 			glVertex2f(x + l * inc - c->g.s_padding, y + c->g.p_padding - c->g.s_size);
 		}
-		else if (c->p[i].left_locked && c->p[l].right_locked)
-		{
-			dprintf(2, "Error: P%d left and P%d right are locked !\n", i, l);
-			dprintf(2, "- P%d: state: %s, request: %s\n", i, states[c->p[i].state], request[c->p[i].request]);
-			dprintf(2, "- P%d: state: %s, request: %s\n", l, states[c->p[l].state], request[c->p[l].request]);
-		}
 		else
-			dprintf(2, "Error: unknown !\n");
+		{
+			dprintf(2, "Error ! stick owner: %d\n", c->s[i].owner);
+		}
 	}
 	glEnd();
 }

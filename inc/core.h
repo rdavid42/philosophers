@@ -29,7 +29,7 @@
 
 typedef struct			s_stick
 {
-	int					locked;
+	int					owner;
 	pthread_mutex_t		mutex;
 }						t_stick;
 
@@ -38,8 +38,6 @@ typedef struct			s_philosopher
 	int					life;
 	struct s_core		*c;
 	int					state;
-	int					left_locked;
-	int					right_locked;
 	int					i;
 	int					stop;
 	int					request;
