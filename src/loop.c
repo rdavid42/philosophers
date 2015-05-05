@@ -30,6 +30,7 @@ int					exit_p(t_core *c)
 			t = 0;
 			while (++i < PN)
 				t += c->p[i].stop;
+			dprintf(2, "t: %d\n", t);
 			usleep(MW);
 		}
 		release_resources(c);

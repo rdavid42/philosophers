@@ -34,5 +34,6 @@ int					init_core(t_core *core)
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	core->stop_sim = 0;
 	core->dead_count = 0;
+	core->current_time = TIMEOUT;
 	return (1);
 }

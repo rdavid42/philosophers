@@ -13,7 +13,7 @@
 #include "core.h"
 
 void				draw_table(t_core *c)
-{	
+{
 	glBegin(GL_LINES);
 	glVertex2f(c->g.t_x, c->g.t_y);
 	glVertex2f(c->g.t_x + c->g.t_width, c->g.t_y);

@@ -24,6 +24,7 @@ int					init_philosophers(t_core *c)
 		c->p[i].state = RESTING;
 		c->p[i].i = i;
 		c->p[i].stop = 0;
+		c->p[i].sleep = 0;
 	}
 	return (1);
 }

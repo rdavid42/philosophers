@@ -17,8 +17,11 @@ static void		neighbours_thinking_action(t_philosopher *p, t_stick *s[2],
 {
 	n[0]->request = REQUEST_STICK;
 	n[1]->request = REQUEST_STICK;
-	if (trylock_loop(p, s[0])
-		&& trylock_loop(p, s[1]))
+	if (!pthread_mutex_trylock(&s[0]->mutex))
+		s[0]->owner = p->i;
+	if (!pthread_mutex_trylock(&s[1]->mutex))
+		s[1]->owner = p->i;
+	if (s[0]->owner == p->i && s[1]->owner == p->i)
 		p->state = EATING;
 }
 
@@ -28,8 +31,11 @@ static void		right_owned_action(t_philosopher *p, t_stick *s[2],
 	if (n[0]->state == THINKING)
 	{
 		n[0]->request = REQUEST_STICK;
-		if (trylock_loop(p, s[0]))
+		if (!pthread_mutex_trylock(&s[0]->mutex))
+		{
+			s[0]->owner = p->i;
 			p->state = EATING;
+		}
 	}
 	else if (n[0]->state == EATING)
 		p->state = THINKING;
@@ -41,8 +47,11 @@ static void		left_owned_action(t_philosopher *p, t_stick *s[2],
 	if (n[1]->state == THINKING)
 	{
 		n[1]->request = REQUEST_STICK;
-		if (trylock_loop(p, s[1]))
+		if (!pthread_mutex_trylock(&s[1]->mutex))
+		{
+			s[1]->owner = p->i;
 			p->state = EATING;
+		}
 	}
 	else if (n[1]->state == EATING)
 		p->state = THINKING;
@@ -56,6 +65,8 @@ void			philosopher_try_action(t_philosopher *p, t_stick *s[2],
 		p->state = EATING;
 	else
 	{
+		if ((s[0]->owner == p->i) ^ (s[1]->owner == p->i))
+			p->state = THINKING;
 		if (n[0]->state == THINKING && n[1]->state == THINKING)
 			neighbours_thinking_action(p, s, n);
 		else if (s[1]->owner == p->i)

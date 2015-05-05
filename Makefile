@@ -15,10 +15,6 @@ VARS		=	-D_REENTRANT -D_THREAD_SAFE -DDEBUG
 
 NAME		=	philo
 
-ifeq "$(PLATFORM)" "WIN32"
-NAME		+=	.exe
-endif
-
 SDL			=	`sdl2-config --libs`
 
 ifeq "$(PLATFORM)" "Darwin" #MAC

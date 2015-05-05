@@ -15,17 +15,22 @@
 
 static void			end_philosopher(t_philosopher *p, t_stick *s[2])
 {
-	unlock_sticks(p, s);
-	p->state = RESTING;
+	(void)s;
+	if (p->life <= 0)
+	{
+		p->life = 0;
+		p->state = DEAD;
+	}
 	p->stop = -1;
 }
 
 void				*start_philosopher(void *pa)
 {
-	t_philosopher	*p = (t_philosopher *)pa;
+	t_philosopher	*p;
 	t_stick			*s[2];
 	t_philosopher	*n[2];
 
+	p = (t_philosopher *)pa;
 	s[0] = &p->c->s[p->i];
 	s[1] = &p->c->s[(p->i + 1) % PN];
 	n[0] = &p->c->p[(p->i - 1) < 0 ? PN - 1 : (p->i - 1)];

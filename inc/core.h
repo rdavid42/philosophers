@@ -54,6 +54,7 @@ typedef struct			s_philosopher
 	int					stop;
 	int					request;
 	pthread_t			thread;
+	int					sleep;
 }						t_philosopher;
 
 typedef struct			s_graphics
@@ -79,6 +80,7 @@ typedef struct			s_core
 	t_philosopher		p[PN];
 	int					dead_count;
 	int					stop_sim;
+	int					current_time;
 }						t_core;
 
 char					*itoa(int n);
@@ -104,10 +106,10 @@ void					draw_philosophers(t_core *c);
 void					draw_text(int const x, int const y,
 								char const *text, void *font);
 void					draw_sticks(t_core *c);
+void					draw_timeout(t_core *c);
 void					unlock_sticks(t_philosopher *p, t_stick *s[2]);
 void					try_lock_sticks(t_philosopher *p, t_stick *s[2]);
 void					lock_sticks(t_philosopher *p, t_stick *s[2]);
-int						trylock_loop(t_philosopher *p, t_stick *s);
 void					philosopher_try_action(t_philosopher *p, t_stick *s[2],
 												t_philosopher *n[2]);
 void					philosopher_rest(t_philosopher *p, t_stick *s[2],
@@ -116,5 +118,7 @@ void					philosopher_eat(t_philosopher *p, t_stick *s[2],
 										t_philosopher *n[2]);
 void					philosopher_think(t_philosopher *p, t_stick *s[2],
 										t_philosopher *n[2]);
+int						check_constants(void);
+void					draw_dead_str(t_core *c);
 
 #endif

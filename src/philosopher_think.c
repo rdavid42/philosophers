@@ -31,6 +31,9 @@ void				philosopher_think(t_philosopher *p, t_stick *s[2],
 			unlock_sticks(p, s);
 			return ;
 		}
+		philosopher_try_action(p, s, n);
+		if (p->state != THINKING)
+			return ;
 		elapsed += MW;
 	}
 	philosopher_try_action(p, s, n);

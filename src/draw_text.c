@@ -19,6 +19,7 @@ void				draw_text(int const x, int const y,
 	int	const	len = slen(text);
 
 	glRasterPos2i(x, y);
-	for (i = 0; i < len; ++i)
+	i = -1;
+	while (++i < len)
 		glutBitmapCharacter(font, text[i]);
 }

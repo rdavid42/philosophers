@@ -12,15 +12,14 @@
 
 #include "core.h"
 
-int			main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	t_core		core;
 
+	if (!check_constants())
+		return (1);
 	if (!init_core(&core))
 		return (1);
-#ifdef linux
-	glutInit(&argc, argv);
-#endif
 	init_graphics(&core.g);
 	if (!init_sticks(&core))
 		return (1);

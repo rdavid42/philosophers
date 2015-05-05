@@ -42,21 +42,10 @@ int					clockwork(t_core *c)
 	current_time = time(NULL) - start_time;
 	if (tmp_time != current_time)
 		philosophers_remove_life(c);
+	c->current_time = TIMEOUT - current_time;
 	if (current_time == TIMEOUT)
 		c->stop_sim = 1;
 	return (1);
-}
-
-void				print_dead_philosopher(t_philosopher *p)
-{
-	int						e;
-	char					*phi;
-
-	phi = itoa(p->i + 1);
-	e = write(1, "Philosopher ", 14);
-	e = write(1, phi, slen(phi));
-	e = write(1, " died !\n", 8);
-	(void)e;
 }
 
 void				update(t_core *c)
@@ -69,10 +58,7 @@ void				update(t_core *c)
 		while (++i < PN)
 		{
 			if (c->p[i].life == 0)
-			{
 				c->dead_count++;
-				print_dead_philosopher(&c->p[i]);
-			}
 		}
 		clockwork(c);
 	}
