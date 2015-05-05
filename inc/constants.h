@@ -29,7 +29,7 @@
 # define THINKING				(2)
 # define DEAD					(3)
 
-# define MAX_LIFE				(10)
+# define MAX_LIFE				(5)
 # define EAT_T					(1)
 # define REST_T					(1)
 # define THINK_T				(1)
