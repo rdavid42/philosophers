@@ -17,7 +17,7 @@
 # define PN						(7)
 
 # define MS(second)				((second) * 1000000)
-# define MW						(100)
+# define MW						(10)
 
 # define SUCCESS_STR			("Now, it is time... To DAAAAAAAANCE!!!")
 
